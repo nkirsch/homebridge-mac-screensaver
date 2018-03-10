@@ -7,21 +7,21 @@ let Service, Characteristic;
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("mac-display", "DisplaySwitch", macDisplay); // register
+  homebridge.registerAccessory("mac-screensaver", "ScreenSaverSwitch", macScreenSaver); // register
 };
 
-function macDisplay(log, config) {
+function macScreenSaver(log, config) {
   this.log = log;
 }
 
-macDisplay.prototype.getServices = function() {
+macScreenSaver.prototype.getServices = function() {
   let informationService = new Service.AccessoryInformation();
   informationService
-    .setCharacteristic(Characteristic.Manufacturer, "christopherwk210")
-    .setCharacteristic(Characteristic.Model, "DisplaySwitch")
+    .setCharacteristic(Characteristic.Manufacturer, "stewartsnow")
+    .setCharacteristic(Characteristic.Model, "ScreenSaverSwitch")
     .setCharacteristic(Characteristic.SerialNumber, package.version);
 
-  let switchService = new Service.Switch("DisplaySwitch");
+  let switchService = new Service.Switch("ScreenSaverSwitch");
   switchService
     .getCharacteristic(Characteristic.On)
     .on('set', this.setSwitchOnCharacteristic.bind(this))
@@ -33,15 +33,15 @@ macDisplay.prototype.getServices = function() {
 }
 
 // Returns proper state of display
-macDisplay.prototype.getSwitchOnCharacteristic = function(next) {
+macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
   exec('pmset -g powerstate IODisplayWrangler | tail -1 | cut -c29', (err, stdout, stderr) => {
     next(null, parseInt(stdout) >= 4);
   });
 }
 
 // Sets the display on or off
-macDisplay.prototype.setSwitchOnCharacteristic = function(on, next) {
-  this.log('Setting mac display: ' + (on ? 'on' : 'off'));
+macScreenSaver.prototype.setSwitchOnCharacteristic = function(on, next) {
+  this.log('Setting mac screensaver: ' + (on ? 'on' : 'off'));
 
   // Check current status
   exec('pmset -g powerstate IODisplayWrangler | tail -1 | cut -c29', (err, stdout, stderr) => {
