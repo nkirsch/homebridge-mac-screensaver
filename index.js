@@ -32,14 +32,15 @@ macScreenSaver.prototype.getServices = function() {
   return [informationService, switchService];
 }
 
-function isRunning(win, mac, linux){
+macScreenSaver.prototype.isRunning = function(win, mac, linux){
     return new Promise(function(resolve, reject){
         const plat = process.platform
-        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac + ' | greg -v grep '  : (plat == 'linux' ? 'ps -A' : ''))
+        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac + ' | grep -v grep '  : (plat == 'linux' ? 'ps -A' : ''))
         const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
         if(cmd === '' || proc === ''){
             resolve(false)
         }
+	console.log('about to run command: ' + cmd);
         exec(cmd, function(err, stdout, stderr) {
             resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
         })
@@ -48,7 +49,7 @@ function isRunning(win, mac, linux){
 
 // Returns proper state of display
 macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
-  isRunning('','ScreenSaverEngine','').then((v) =>  
+  this.isRunning('','ScreenSaverEngine','').then((v) =>  
 	{  
 	this.log('screen saver running? ' + v);
 	next(null, v)
