@@ -1,20 +1,20 @@
 {
-  "name": "homebridge-mac-display",
+  "name": "homebridge-mac-screensaver",
   "version": "1.0.8",
-  "description": "Control your mac display with HomeBridge",
+  "description": "Control your mac screensaver with HomeBridge",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Chris Anselmo <christopherwk210@gmail.com>",
+  "author": "Stewart Snow <stewart.snow@snowsd.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/christopherwk210/homebridge-mac-display.git"
+    "url": "git://github.com/stewartsnow/homebridge-mac-screensaver.git"
   },
   "bugs": {
-    "url": "https://github.com/christopherwk210/homebridge-mac-display/issues",
-    "email": "christopherwk210@gmail.com"
+    "url": "https://github.com/stewartsnow/homebridge-mac-screensaver/issues",
+    "email": "stewart.snow@snowsd.com"
   },
   "engines": {
     "node": ">=6.0.0",
