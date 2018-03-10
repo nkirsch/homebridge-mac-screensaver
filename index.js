@@ -35,7 +35,7 @@ macScreenSaver.prototype.getServices = function() {
 function isRunning(win, mac, linux){
     return new Promise(function(resolve, reject){
         const plat = process.platform
-        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac : (plat == 'linux' ? 'ps -A' : ''))
+        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac + ' | greg -v grep '  : (plat == 'linux' ? 'ps -A' : ''))
         const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
         if(cmd === '' || proc === ''){
             resolve(false)
@@ -48,9 +48,13 @@ function isRunning(win, mac, linux){
 
 // Returns proper state of display
 macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
-  var result=isRunning('','ScreenSaverEngine',''); 
-  this.log('screensaverrunning=' + result.toString());
-  next(null, result);
+  isRunning('','ScreenSaverEngine','').then((v) =>  
+	{  
+	this.log('screen saver running? ' + v);
+	next(null, v)
+	}
+  );
+  //next(null, false);
 }
 
 // Sets the display on or off
@@ -60,6 +64,9 @@ macScreenSaver.prototype.setSwitchOnCharacteristic = function(on, next) {
   	if(on)
 	{
 	  this.log('about to launch');
+	  // wake screen if asleep
+	  exec('caffeinate -u -t 1');
+	  // lunach screensaver app
 	  exec('open /System/Library/CoreServices/ScreenSaverEngine.app');
 	  this.log('screensaver launched');
 	}
@@ -67,4 +74,5 @@ macScreenSaver.prototype.setSwitchOnCharacteristic = function(on, next) {
 	{
 	  exec('pmset displaysleepnow');
 	} 
+	next();
 }
