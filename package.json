@@ -26,5 +26,8 @@
     "mac",
     "display",
     "screen"
-  ]
+  ],
+  "dependencies": {
+    "osx-screensaver": "^2.1.0"
+  }
 }

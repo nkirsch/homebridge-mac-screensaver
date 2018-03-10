@@ -1,6 +1,6 @@
 const package = require('./package.json');
 const exec = require('child_process').exec;
-
+const osxScreensaver = require('osx-screensaver');
 let Service, Characteristic;
 
 // Set up homebridge
@@ -32,22 +32,39 @@ macScreenSaver.prototype.getServices = function() {
   return [informationService, switchService];
 }
 
+function isRunning(win, mac, linux){
+    return new Promise(function(resolve, reject){
+        const plat = process.platform
+        const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac : (plat == 'linux' ? 'ps -A' : ''))
+        const proc = plat == 'win32' ? win : (plat == 'darwin' ? mac : (plat == 'linux' ? linux : ''))
+        if(cmd === '' || proc === ''){
+            resolve(false)
+        }
+        exec(cmd, function(err, stdout, stderr) {
+            resolve(stdout.toLowerCase().indexOf(proc.toLowerCase()) > -1)
+        })
+    })
+}
+
 // Returns proper state of display
 macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
-  exec('pmset -g powerstate IODisplayWrangler | tail -1 | cut -c29', (err, stdout, stderr) => {
-    next(null, parseInt(stdout) >= 4);
-  });
+  var result=isRunning('','ScreenSaverEngine',''); 
+  this.log('screensaverrunning=' + result.toString());
+  next(null, result);
 }
 
 // Sets the display on or off
 macScreenSaver.prototype.setSwitchOnCharacteristic = function(on, next) {
   this.log('Setting mac screensaver: ' + (on ? 'on' : 'off'));
 
-  // Check current status
-  exec('pmset -g powerstate IODisplayWrangler | tail -1 | cut -c29', (err, stdout, stderr) => {
-    if ((parseInt(stdout) >= 4) !== on) {
-      on ? exec('caffeinate -u -t 1') : exec('pmset displaysleepnow');
-    }
-    next();    
-  });
+  	if(on)
+	{
+	  this.log('about to launch');
+	  exec('open /System/Library/CoreServices/ScreenSaverEngine.app');
+	  this.log('screensaver launched');
+	}
+	else
+	{
+	  exec('pmset displaysleepnow');
+	} 
 }
