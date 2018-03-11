@@ -1,6 +1,5 @@
 const package = require('./package.json');
 const exec = require('child_process').exec;
-const osxScreensaver = require('osx-screensaver');
 let Service, Characteristic;
 
 // Set up homebridge
