@@ -1,18 +1,20 @@
-# homebridge-mac-display
-Control your mac display with [HomeBridge](https://github.com/nfarina/homebridge). Currently this only works if you are running homebridge on a mac, and will only control the display of that specific mac. I made this for personal use, since I use a Mac mini to control my homebridge as well as a HTPC, so it's convenient to be able to turn the display on and off from my phone.
+# homebridge-mac-screensaver
+Control your mac screensaver with [HomeBridge](https://github.com/nfarina/homebridge). Currently this only works if you are running homebridge on a mac with high sierra.
+
+When on, it launches the screensaver on your mac, when off it puts the display to sleep. I use this to ensure that my mac screensaver is running and showing my photos when I'm in the room or coming home, etc but ensures its asleep when I'm out.
 
 ## Installation
 - Install homebridge: `npm install -g homebridge`
-- Install homebridge-mac-display: `npm install -g homebridge-mac-display`
+- Install homebridge-mac-display: `npm install -g homebridge-mac-screensaver --unsafe-perm`
 - Update configuration file
 
 ## Configuration file
-All you have to do is add a new accessory under the `DisplaySwitch` name:
+All you have to do is add a new accessory under the `ScreenSaverSwitch` name:
 ```json
 "accessories": [
   {
-    "accessory": "DisplaySwitch",
-    "name": "My Mac HomeBridge Host"
+    "accessory": "ScreenSaverSwitch",
+    "name": "My Mac Screensaver"
   }
 ]
 ```

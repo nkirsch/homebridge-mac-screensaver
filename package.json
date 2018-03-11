@@ -1,6 +1,6 @@
 {
   "name": "homebridge-mac-screensaver",
-  "version": "1.0.8",
+  "version": "0.1.0",
   "description": "Control your mac screensaver with HomeBridge",
   "main": "index.js",
   "scripts": {
@@ -25,9 +25,7 @@
     "homebridge",
     "mac",
     "display",
-    "screen"
-  ],
-  "dependencies": {
-    "osx-screensaver": "^2.1.0"
-  }
+    "screen",
+    "screensaver"
+  ]
 }
