@@ -13,6 +13,8 @@ module.exports = function(homebridge) {
 function urlScreenSwitch(log, config) {
   this.log = log;
   this.config = config;
+
+  this.log('config is ? ' + this.config);
 }
 
 urlScreenSwitch.prototype.getServices = function() {
