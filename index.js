@@ -39,9 +39,9 @@ urlScreenSwitch.prototype.isRunning = function () {
   return new Promise(function (resolve, reject) {
     // Define the HTTP options based on the platform
     const options = {
-      hostname: this.config.hostname,
-      port: this.config.port,
-      path: this.config.path,
+      hostname: 'nick.home.kirsch.org',
+      port: 19820,
+      path: '/',
       method: 'GET'
     };
 
@@ -107,9 +107,9 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
 
     // Set the options for the POST request
     const options = {
-      hostname: this.config.hostname,
-      port: this.config.port, // Replace with your target port (e.g., 443 for HTTPS)
-      path: this.config.path, // Replace with your API endpoint path
+      hostname: 'nick.home.kirsch.org',
+      port: '19820', // Replace with your target port (e.g., 443 for HTTPS)
+      path: '/', // Replace with your API endpoint path
       method: 'POST', // Change to 'POST' for a POST request
       headers: {
         'Content-Type': 'application/json',
@@ -157,9 +157,9 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
 
     // Set the options for the POST request
     const options = {
-      hostname: this.config.hostname,
-      port: this.config.port, // Replace with your target port (e.g., 443 for HTTPS)
-      path: this.config.path, // Replace with your API endpoint path
+      hostname: 'nick.home.kirsch.org',
+      port: 19820, // Replace with your target port (e.g., 443 for HTTPS)
+      path: '/', // Replace with your API endpoint path
       method: 'POST', // Change to 'POST' for a POST request
       headers: {
         'Content-Type': 'application/json',
