@@ -98,6 +98,8 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
     // Define the JSON data to send in the POST request
     const jsonData = {
       password: 'nightnight',
+      display: true,
+      on: true,
     };
 
     // Convert the JSON data to a string
@@ -141,9 +143,56 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
     // Send the JSON payload in the POST request
     req.write(jsonPayload);
     req.end();
+    next();
   } else {
-    // Handle turning off the screensaver here, if needed
-    this.log('Turning off screensaver');
+    // Define the JSON data to send in the POST request
+    const jsonData = {
+      password: 'nightnight',
+      display: false,
+      on: false,
+    };
+
+    // Convert the JSON data to a string
+    const jsonPayload = JSON.stringify(jsonData);
+
+    // Set the options for the POST request
+    const options = {
+      hostname: this.config.hostname,
+      port: this.config.port, // Replace with your target port (e.g., 443 for HTTPS)
+      path: this.config.path, // Replace with your API endpoint path
+      method: 'POST', // Change to 'POST' for a POST request
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': jsonPayload.length,
+      },
+    };
+
+    // Create the HTTP request
+    const req = http.request(options, (res) => {
+      let responseData = '';
+
+      res.on('data', (chunk) => {
+        responseData += chunk;
+      });
+
+      res.on('end', () => {
+        // Handle the response here, if needed
+        this.log('HTTP request completed');
+        this.log('Response:', responseData);
+        this.log('screensaver launched');
+        next();
+      });
+    });
+
+    // Handle potential errors
+    req.on('error', (error) => {
+      this.log('HTTP request error:', error);
+      next();
+    });
+
+    // Send the JSON payload in the POST request
+    req.write(jsonPayload);
+    req.end();
     next();
   }
 };
