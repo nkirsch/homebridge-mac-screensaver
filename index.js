@@ -7,7 +7,7 @@ let Service, Characteristic;
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("url-screensaver", "ScreenSwitch", urlScreenSwitch); // register
+  homebridge.registerAccessory("homebridge-url-screensaver", "ScreenSwitch", urlScreenSwitch); // register
 };
 
 function urlScreenSwitch(log, config) {
@@ -93,8 +93,6 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
   this.log('Setting url screensaver: ' + (on ? 'on' : 'off'));
 
   if (on) {
-    this.log('about to launch');
-
     // Define the JSON data to send in the POST request
     const jsonData = {
       password: 'nightnight',
@@ -126,10 +124,9 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
       });
 
       res.on('end', () => {
-        // Handle the response here, if needed
-        this.log('HTTP request completed');
-        this.log('Response:', responseData);
-        this.log('screensaver launched');
+        // Send the JSON payload in the POST request
+	req.write(jsonPayload);
+	req.end();
         next();
       });
     });
@@ -139,11 +136,6 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
       this.log('HTTP request error:', error);
       next();
     });
-
-    // Send the JSON payload in the POST request
-    req.write(jsonPayload);
-    req.end();
-    next();
   } else {
     // Define the JSON data to send in the POST request
     const jsonData = {
@@ -176,10 +168,10 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
       });
 
       res.on('end', () => {
-        // Handle the response here, if needed
-        this.log('HTTP request completed');
-        this.log('Response:', responseData);
-        this.log('screensaver launched');
+	// Send the JSON payload in the POST request
+	req.write(jsonPayload);
+	req.end();
+
         next();
       });
     });
@@ -190,10 +182,6 @@ urlScreenSwitch.prototype.setSwitchOnCharacteristic = function (on, next) {
       next();
     });
 
-    // Send the JSON payload in the POST request
-    req.write(jsonPayload);
-    req.end();
-    next();
   }
 };
 
