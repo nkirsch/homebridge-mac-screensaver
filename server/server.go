@@ -17,7 +17,7 @@ func main() {
 
 func startServer() {
 	http.HandleFunc("/", handleRequest)
-	port := 80 //19820
+	port := 19820
 	fmt.Printf("Server listening on port %d...\n", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
@@ -26,33 +26,55 @@ func startServer() {
 }
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
+	if r.Method != http.MethodPost && r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	var requestBody RequestBody
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&requestBody)
-	if err != nil {
-		http.Error(w, "Invalid JSON format", http.StatusBadRequest)
-		return
+	if r.Method == http.MethodPost {
+
+		var requestBody RequestBody
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&requestBody)
+		if err != nil {
+			http.Error(w, "Invalid JSON format", http.StatusBadRequest)
+			return
+		}
+
+		if requestBody.Password != "nightnight" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		// If the password is correct, execute the command
+		cmd := exec.Command("pmset", "displaysleepnow")
+		err = cmd.Run()
+		if err != nil {
+			http.Error(w, "Error executing command", http.StatusInternalServerError)
+			return
+		}
+
+		fmt.Fprintf(w, "Command executed successfully: pmset displaysleepnow\n")
 	}
 
-	if requestBody.Password != "nightnight" {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
+	if r.Method == http.MethodGet {
+		isRunning := false // Change this to your actual logic
+
+		// Create a response JSON object
+		response := struct {
+			IsRunning bool `json:"isRunning"`
+		}{
+			IsRunning: isRunning,
+		}
+
+		// Encode the response as JSON
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
-	// If the password is correct, execute the command
-	cmd := exec.Command("pmset", "displaysleepnow")
-	err = cmd.Run()
-	if err != nil {
-		http.Error(w, "Error executing command", http.StatusInternalServerError)
-		return
-	}
-
-	fmt.Fprintf(w, "Command executed successfully: pmset displaysleepnow\n")
 }
 
 func stopDaemon() {
