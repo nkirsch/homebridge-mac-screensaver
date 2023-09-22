@@ -1,20 +1,20 @@
 {
-  "name": "homebridge-mac-screensaver",
-  "version": "0.2.1",
-  "description": "Control your mac screensaver with HomeBridge",
+  "name": "homebridge-url-screensaver",
+  "version": "0.0.1",
+  "description": "Control your url screensaver with HomeBridge",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Stewart Snow <stewart.snow@snowsd.com>",
+  "author": "Nick Kirsch <nick@kirsch.org>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/stewartsnow/homebridge-mac-screensaver.git"
+    "url": "git://github.com/nkirsch/homebridge-url-screensaver.git"
   },
   "bugs": {
-    "url": "https://github.com/stewartsnow/homebridge-mac-screensaver/issues",
-    "email": "stewart.snow@snowsd.com"
+    "url": "https://github.com/nkirsch/homebridge-url-screensaver/issues",
+    "email": "nick@kirsch.org"
   },
   "engines": {
     "node": ">=6.0.0",
@@ -23,7 +23,7 @@
   "keywords": [
     "homebridge-plugin",
     "homebridge",
-    "mac",
+    "url",
     "display",
     "screen",
     "screensaver"

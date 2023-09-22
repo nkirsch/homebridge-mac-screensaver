@@ -7,14 +7,14 @@ let Service, Characteristic;
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("mac-screensaver", "ScreenSaverSwitch", macScreenSaver); // register
+  homebridge.registerAccessory("url-screensaver", "ScreenSaverSwitch", urlScreenSaver); // register
 };
 
-function macScreenSaver(log, config) {
+function urlScreenSaver(log, config) {
   this.log = log;
 }
 
-macScreenSaver.prototype.getServices = function() {
+urlScreenSaver.prototype.getServices = function() {
   let informationService = new Service.AccessoryInformation();
   informationService
     .setCharacteristic(Characteristic.Manufacturer, "Kirsch")
@@ -32,7 +32,7 @@ macScreenSaver.prototype.getServices = function() {
   return [informationService, switchService];
 }
 
-macScreenSaver.prototype.isRunning = function(win, mac, linux){
+urlScreenSaver.prototype.isRunning = function(win, mac, linux){
     return new Promise(function(resolve, reject){
         const plat = process.platform
         const cmd = plat == 'win32' ? 'tasklist' : (plat == 'darwin' ? 'ps -ax | grep ' + mac + ' | grep -v grep '  : (plat == 'linux' ? 'ps -A' : ''))
@@ -48,7 +48,7 @@ macScreenSaver.prototype.isRunning = function(win, mac, linux){
 }
 
 // Returns proper state of display
-macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
+urlScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
   this.isRunning('','ScreenSaverEngine','').then((v) =>  
 	{  
 	this.log('screen saver running? ' + v);
@@ -60,8 +60,8 @@ macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
 
 
 // Sets the display on or off
-macScreenSaver.prototype.setSwitchOnCharacteristic = function (on, next) {
-  this.log('Setting mac screensaver: ' + (on ? 'on' : 'off'));
+urlScreenSaver.prototype.setSwitchOnCharacteristic = function (on, next) {
+  this.log('Setting url screensaver: ' + (on ? 'on' : 'off'));
 
   if (on) {
     this.log('about to launch');
