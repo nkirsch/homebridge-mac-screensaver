@@ -1,5 +1,6 @@
 const package = require('./package.json');
 const exec = require('child_process').exec;
+const http = require('http'); // or 'https' for HTTPS requests
 let Service, Characteristic;
 
 // Set up homebridge
@@ -16,7 +17,7 @@ function macScreenSaver(log, config) {
 macScreenSaver.prototype.getServices = function() {
   let informationService = new Service.AccessoryInformation();
   informationService
-    .setCharacteristic(Characteristic.Manufacturer, "stewartsnow")
+    .setCharacteristic(Characteristic.Manufacturer, "Kirsch")
     .setCharacteristic(Characteristic.Model, "ScreenSaverSwitch")
     .setCharacteristic(Characteristic.SerialNumber, package.version);
 
@@ -57,22 +58,64 @@ macScreenSaver.prototype.getSwitchOnCharacteristic = function(next) {
   //next(null, false);
 }
 
+
 // Sets the display on or off
-macScreenSaver.prototype.setSwitchOnCharacteristic = function(on, next) {
+macScreenSaver.prototype.setSwitchOnCharacteristic = function (on, next) {
   this.log('Setting mac screensaver: ' + (on ? 'on' : 'off'));
 
-  	if(on)
-	{
-	  this.log('about to launch');
-	  // wake screen if asleep
-	  exec('caffeinate -u -t 1');
-	  // lunach screensaver app
-	  exec('open /System/Library/CoreServices/ScreenSaverEngine.app');
-	  this.log('screensaver launched');
-	}
-	else
-	{
-	  exec('pmset displaysleepnow');
-	} 
-	next();
-}
+  if (on) {
+    this.log('about to launch');
+
+    // Define the JSON data to send in the POST request
+    const jsonData = {
+      password: 'nightnight',
+    };
+
+    // Convert the JSON data to a string
+    const jsonPayload = JSON.stringify(jsonData);
+
+    // Set the options for the POST request
+    const options = {
+      hostname: 'nick.home.kirsch.org', // Replace with your target hostname
+      port: 80, // Replace with your target port (e.g., 443 for HTTPS)
+      path: '/', // Replace with your API endpoint path
+      method: 'POST', // Change to 'POST' for a POST request
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': jsonPayload.length,
+      },
+    };
+
+    // Create the HTTP request
+    const req = http.request(options, (res) => {
+      let responseData = '';
+
+      res.on('data', (chunk) => {
+        responseData += chunk;
+      });
+
+      res.on('end', () => {
+        // Handle the response here, if needed
+        this.log('HTTP request completed');
+        this.log('Response:', responseData);
+        this.log('screensaver launched');
+        next();
+      });
+    });
+
+    // Handle potential errors
+    req.on('error', (error) => {
+      this.log('HTTP request error:', error);
+      next();
+    });
+
+    // Send the JSON payload in the POST request
+    req.write(jsonPayload);
+    req.end();
+  } else {
+    // Handle turning off the screensaver here, if needed
+    this.log('Turning off screensaver');
+    next();
+  }
+};
+
