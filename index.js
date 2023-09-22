@@ -33,8 +33,6 @@ urlScreenSwitch.prototype.getServices = function() {
   return [informationService, switchService];
 }
 
-const http = require('http'); // or 'https' for HTTPS requests
-
 urlScreenSwitch.prototype.isRunning = function () {
   return new Promise(function (resolve, reject) {
     // Define the HTTP options based on the platform
